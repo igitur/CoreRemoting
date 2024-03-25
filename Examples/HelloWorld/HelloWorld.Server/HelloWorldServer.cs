@@ -1,7 +1,9 @@
 ﻿using System;
 using CoreRemoting;
+using CoreRemoting.Channels.Tcp;
 using CoreRemoting.DependencyInjection;
-using CoreRemoting.Serialization.Binary;
+using CoreRemoting.Serialization;
+using CoreRemoting.Serialization.Bson;
 using HelloWorld.Shared;
 
 namespace HelloWorld.Server
@@ -43,7 +45,8 @@ namespace HelloWorld.Server
                 HostName = "localhost",
                 NetworkPort = 9090,
                 MessageEncryption = false,
-                Serializer = new BinarySerializerAdapter(),
+                Channel = new TcpServerChannel(),
+                Serializer = new BsonSerializerAdapter(),
                 RegisterServicesAction = container =>
                 {
                     container.RegisterService<ISayHelloService, SayHelloService>(ServiceLifetime.Singleton);
@@ -64,6 +67,8 @@ namespace HelloWorld.Server
 
                 Console.WriteLine("-----------------------------------");
             };
+
+            CrossFrameworkSerialization.RedirectPrivateCoreLibToMscorlib();
 
             // Start server
             server.Start();

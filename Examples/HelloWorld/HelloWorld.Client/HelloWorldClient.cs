@@ -1,6 +1,8 @@
 ﻿using System;
 using CoreRemoting;
-using CoreRemoting.Serialization.Binary;
+using CoreRemoting.Channels.Tcp;
+using CoreRemoting.Serialization;
+using CoreRemoting.Serialization.Bson;
 using HelloWorld.Shared;
 
 namespace HelloWorld.Client
@@ -19,11 +21,14 @@ namespace HelloWorld.Client
             using var client = new RemotingClient(new ClientConfig()
             {
                 ServerHostName = "localhost",
-                Serializer = new BinarySerializerAdapter(),
+                Channel = new TcpClientChannel(),
+                Serializer = new BsonSerializerAdapter(),
                 MessageEncryption = false,
                 ServerPort = 9090
             });
-            
+
+            CrossFrameworkSerialization.RedirectMscorlibToPrivateCoreLib();
+
             // Establish connection to server
             client.Connect();
 
